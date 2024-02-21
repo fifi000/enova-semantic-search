@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul class="list-group mt-4">
+        {% for document in documents %}
+            {% include "_result.html" %}
+        {% endfor %}
+    </ul>
+{% endblock content %}

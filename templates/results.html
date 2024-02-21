@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if results %}
+    {% for title, documents in results.items() %}
+        <div>
+            <h3 class="mt-4">{{ title }}</h3>
+            <ul class="list-group mt-4">
+                {% for document in documents %}
+                    {% include "_result.html" %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock content %}

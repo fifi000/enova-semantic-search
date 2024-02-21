@@ -1,0 +1,37 @@
+{# <li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+        <div class="fw-bold">
+            <a href="{{ document.source }}" class="text-decoration-none text-dark" target="_blank">{{ document.title }}</a>
+        </div>
+        <ol class="mb-2">
+            {% for p in document.path[:-1] %}
+                <li class="text-muted">{{ p }}</li> 
+            {% endfor %}                      
+        </ol>
+        <div class="text-break">
+            {{ document.page_content }}
+        </div>
+    </div>
+    <span class="badge bg-primary rounded-pill">{{ document.score|round(2) }}</span>
+</li> #}
+
+
+<li class="list-group-item rounded overflow-auto" style="height: 20rem;">
+    <div class="d-flex justify-content-between">
+        <div class="fw-bold">
+            <a href="{{ document.source }}" class="text-decoration-none text-dark" target="_blank">{{ document.title }}</a>
+        </div>
+        <div class="ps-2">
+            <span class="badge bg-primary rounded-pill">{{ document.score|round(2) }}</span>
+        </div>
+    </div>
+    <ol class="mb-2">
+        {% for p in document.path[:-1] %}
+            <li class="text-muted">{{ p }}</li> 
+        {% endfor %}                      
+    </ol>
+    <div class="text-break">
+        {{ document.page_content }}
+    </div>
+</li>
+<br>

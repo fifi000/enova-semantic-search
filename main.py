@@ -14,7 +14,7 @@ from langchain_experimental.text_splitter import SemanticChunker
 
 
 
-DATABASE_PATH = './db/chroma_db_znaki_150'
+DATABASE_PATH = './db/chroma_db_path'
 DATA_PATH = './data/combined.json'
 # DATA_PATH = '/data/wszystkie.json'
 
@@ -23,10 +23,7 @@ JSON_DATA = []
 
 # helpers
 def chunks(lst, n):
-    output = []
-    for i in range(0, len(lst), n):
-        output.append(lst[i:i + n])
-    return output
+    return [lst[i:i + n] for i in range(0, len(lst), n)]
 
 
 def find_article_path(url: str) -> list[str]:
@@ -92,24 +89,36 @@ def get_db(create_if_not_exists: bool = False):
        
 
 def main():
-    vectorstore = get_db(create_if_not_exists=True)
+    db = Chroma(persist_directory='./db/chroma_db_paths', embedding_function=OpenAIEmbeddings())
+    db._collection.add()
+    data = json.load(open(DATA_PATH, 'r', encoding='utf-8'))
+    tags = [
+        { 'data': d['metadata']['tags'], 'source': d['metadata']['source'], 'tags': d['metadata']['tags'] }
+        for d in data
+    ]
+    titles = [
+        { 'data': path[-1], 'source': t['source'], 'tags': t['tags']}
+        for t in tags if len(path := t['data'].split('\t')) > 1
+    ]
 
-    while question := input('Question:\n'):
-        print(f'\nSearch:')
-        results = vectorstore.similarity_search_with_relevance_scores(question, k=10)        
-        results = sorted(results, key=lambda x: x[1], reverse=True)
+    for tag in tags:
+        tag['data'] = tag['data'].replace('\t', '. ')
 
-        seen = set()
+    # all data
+    all_data = tags + titles
 
-        for doc, score in results:
-            if doc.metadata['source'] in seen:
-                continue
-            print(f'Score: {score:.2f}')
-            print(f'Doc: {doc.page_content[:250]}...')
-            print(f'Source: {doc.metadata["source"]}\n')            
-        print()
+    # create docs
+    docs = [
+        Document(page_content=d['data'], metadata={'source': d['source'], 'tags': d['tags']}) 
+        for d in all_data
+    ]
+
+    # add to db
+    print('Adding data to db...')
+    for chunk in tqdm(chunks(docs, 1000)):
+        db.add_documents(chunk)
 
 
 if __name__ == '__main__':
-    create_db()
+    pass
   

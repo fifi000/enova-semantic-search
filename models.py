@@ -8,6 +8,7 @@ class DocumentModel:
         
         self.score = score
         self.page_content = doc.page_content
-        self.source = metadata['source']
-        self.path = metadata['tags']
+        # self.source = metadata['source']
+        self.source = metadata.get('source', 'unknown')
+        self.path = metadata['tags'].split('\t')
         self.title = self.path[-1]

@@ -7,17 +7,56 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>    <title>Enova Search</title>
 </head>
 <body>
-<div class="container-fluid py-2">
+
+<script>
+    // add shadow to navbar on scroll
+    window.addEventListener('scroll', function() {
+        var navbar = document.getElementById('navbar');
+
+        if (window.pageYOffset > 5) {
+            navbar.classList.add('shadow-sm');
+            navbar.classList.add('border-bottom');
+        } else {
+            navbar.classList.remove('shadow-sm');
+            navbar.classList.remove('border-bottom');
+        }
+    });
+
+    // add loading button 
+    document.addEventListener('DOMContentLoaded', function() {
+        var forms = document.querySelectorAll('form');
+
+        forms.forEach(function(form) {
+            form.addEventListener('submit', function() {
+                var button = form.querySelector('button[type="submit"]');
+                button.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>';
+                button.disabled = true;
+            });
+        });
+    });
+</script>
+
+{% set columns = "col-10" %}
+
+<div class="container-fluid pb-2">
     <div class="row justify-content-center">
-        <nav class="shadow p-3 mb-5 bg-success border-bottom" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1020; --bs-bg-opacity: .9">
-            <form class="d-flex" action="/search" method="POST">
-                <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ query }}">
-                <input class="form-control me-2 w-25" type="password" name="password" placeholder="Password" aria-label="Password" required value="{{ password }}">
-                <button class="btn btn-outline-dark" type="submit">Search</button>
-            </form>
+        <nav class="py-3 bg-white sticky-top" style="z-index: 1020; --bs-bg-opacity: .9" id="navbar">
+            <div class="container {{ columns }} p-0">
+                <form class="row" action="/search" method="POST">
+                    <div class="col-8">
+                        <input class="form-control" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ query }}">
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" type="password" name="password" placeholder="Password" aria-label="Password" required value="{{ password }}">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-outline-dark w-100" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
         </nav>
 
-        <div class="px-2 mt-5 col-10">
+        <div class="px-2 {{ columns }}">
             {% block content %}{% endblock %}
         </div>
     </div>

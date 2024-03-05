@@ -16,7 +16,7 @@
 </li> #}
 
 
-<li class="list-group-item rounded overflow-auto" style="height: 20rem;">
+<li class="list-group-item rounded shadow-sm">
     <div class="d-flex justify-content-between">
         <div class="fw-bold">
             <a href="{{ document.source }}" class="text-decoration-none text-dark" target="_blank">{{ document.title }}</a>
@@ -27,7 +27,7 @@
     </div>
     <ol class="mb-2">
         {% for p in document.path[:-1] %}
-            <li class="text-muted">{{ p }}</li> 
+            <li class="text-muted font-size-sm">{{ p }}</li> 
         {% endfor %}                      
     </ol>
     <div class="text-break">
